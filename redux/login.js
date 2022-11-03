@@ -16,7 +16,7 @@ export const loginSlice = createSlice({
     loginSuccess: (state, action) => {
       state = action.payload;
     },
-    logout: (state, action) => {
+    logout: (state) => {
       state.login = null;
     }
   }
