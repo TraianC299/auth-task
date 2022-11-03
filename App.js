@@ -1,15 +1,20 @@
-import { StyleSheet } from 'react-native';
 import Navigation from './navigation';
-import Home from './screens/Home';
-import LogIn from './screens/LogIn';
-import SignUp from './screens/SignUp';
+import { Provider } from 'react-redux';
+import {  createStore, combineReducers } from 'redux'
+import signUpReducer from "./redux/signup";
+import loginReducer from "./redux/login";
+
+const reducer = combineReducers({
+  signup: signUpReducer,
+  login: loginReducer,
+})
+const store = createStore(reducer)
 
 export default function App() {
   return (
-    // <LogIn></LogIn>
-    // <SignUp></SignUp>
-    // <Home></Home>
-    <Navigation></Navigation>
+    <Provider store={store}>
+      <Navigation></Navigation>
+    </Provider>
   );
 }
 

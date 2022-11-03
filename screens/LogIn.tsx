@@ -6,50 +6,62 @@ import Input from '../components/input/Input';
 import Button from '../components/buttons/Button';
 import { textStyles } from '../styles/text';
 import { useNavigation } from '@react-navigation/native';
- 
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from '../redux/login';
 
-const SignUp = () => {
+
+const LogIn = () => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 //   const {setCurrentUser} =  useAuth()
-  const [loading, setLoading] = useState<boolean>(false)
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const signupState = useSelector((state: any) => state.signup);
 
-const loginFunc = async () => {
-  setLoading(true)
-    const response = await fetch(`https://commo-store.com/api/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify({
-            email: email,
-            password: password
-        }),
-        headers: {
-            'Accept': 'application/json',
-            "Content-Type": "application/json"
-          },
+  const [emailError, setEmailError] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<string>('')
 
-    })
-    
-    const data = await response.json()
-    // setCurrentUser((previous:)=>({
-    //    uid: data.uid, 
-    //    token: data.token,
-    // }))
-    setLoading(false)
 
+  const isValid = () => {
+    setEmailError(email !== signupState.email ? 'Emails do not match' : '')
+    setPasswordError(password !== signupState.password ? 'Passwords do not match' : '')
+    if( email !== signupState.email && password !== signupState.password ){
+      return false
+    }
+    return true
 }
+
+
+  const loginFunc = () => {
+    isValid()
+    if(isValid()){
+
+      try{
+        dispatch(loginSuccess({
+          email,
+          password,
+        }))
+        navigation.navigate("Home")
+      }catch(e){
+        console.log(e)
+      }
+    }
+ 
+   
+     
+  };
+  
+  
 
 
   return (
     <SafeAreaView style={styles.container}>
-        {loading?<View style={{flex:1, justifyContent:"center", alignContent:"center"}}>
-          <ActivityIndicator size="large" color={MAINCOLOR}></ActivityIndicator>
-        </View>:
+         
         <View style={styles.viewContainer}>
           
             <Text style={[textStyles.h2, styles.title]}>Log In:</Text>
-            <Input value={email} setValue={setEmail} placeholder="Email"></Input>
-            <Input value={password} setValue={setPassword} secureTextEntry={true} placeholder="Password"></Input>
+            <Input error={emailError} setError={setEmailError} value={email} setValue={setEmail} placeholder="Email" keyboardType='email-address'></Input>
+            <Input error={passwordError} setError={setPasswordError} value={password} setValue={setPassword} secureTextEntry={true} placeholder="Password"></Input>
        
             <Button  onPress={()=>loginFunc()} style={{alignSelf:"flex-end"}}>
               Log in
@@ -71,7 +83,7 @@ const loginFunc = async () => {
                 </Pressable>
             </View>
 
-        </View>}
+        </View>
         
     </SafeAreaView>
   )
@@ -99,4 +111,4 @@ buttonText: {
         flex:1,
     }
 })
-export default SignUp
+export default LogIn

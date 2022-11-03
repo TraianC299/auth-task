@@ -8,6 +8,7 @@ const Animation = () => {
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderMove: Animated.event([
+        
         null,
         { dx: pan.x, dy: pan.y }
       ]),
@@ -19,7 +20,7 @@ const Animation = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>Drag & Release this box!</Text>
+      <Text style={styles.titleText}>Drag & drop this square!</Text>
       <Animated.View
         style={{
           transform: [{ translateX: pan.x }, { translateY: pan.y }]
@@ -34,7 +35,6 @@ const Animation = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center"
   },

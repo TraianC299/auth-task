@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { View, StyleSheet, SafeAreaView, Text, ActivityIndicator, Pressable } from 'react-native'
 import { MAINCOLOR, WHITE } from '../constants/colors'
-// import { useAuth } from '../contexts/AuthContext'
 import Input from '../components/input/Input';
 import Button from '../components/buttons/Button';
 import { textStyles } from '../styles/text';
 import { useNavigation } from '@react-navigation/native';
- 
+import { useDispatch } from "react-redux";
+import {signupSuccess} from '../redux/signup';
+import { isEmail } from '../utils/validation';
 
 const SignUp = () => {
   const [email, setEmail] = React.useState('')
@@ -15,49 +16,70 @@ const SignUp = () => {
   const [firstName, setFirstName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
 //   const {setCurrentUser} =  useAuth()
-  const [loading, setLoading] = useState<boolean>(false)
   const nav = useNavigation()
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-const loginFunc = async () => {
-  setLoading(true)
-    const response = await fetch(`https://commo-store.com/api/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify({
-            email: email,
-            password: password
-        }),
-        headers: {
-            'Accept': 'application/json',
-            "Content-Type": "application/json"
-          },
 
-    })
-    
-    const data = await response.json()
-    // setCurrentUser((previous:)=>({
-    //    uid: data.uid, 
-    //    token: data.token,
-    // }))
-    setLoading(false)
+  const [emailError, setEmailError] = useState<string>('')
+  const [passwordError, setPasswordError] = useState<string>('')
+  const [passwordRepeatError, setPasswordRepeatError] = useState<string>('')
+  const [firstNameError, setFirstNameError] = useState<string>('')
+  const [lastNameError, setLastNameError] = useState<string>('')
 
-}
+
+
+
+  const isValid = () => {
+      setEmailError(isEmail(email))
+      setPasswordError(password.length < 6 ? 'Password must be at least 6 characters' : '')
+      setPasswordRepeatError(password !== passwordRepeat ? 'Passwords do not match' : '')
+      setFirstNameError(firstName.length < 2 ? 'First name must be at least 2 characters' : '')
+      setLastNameError(lastName.length < 2 ? 'Last name must be at least 2 characters' : '')
+
+      if (isEmail(email) || password.length < 6 || password !== passwordRepeat || firstName.length < 2 || lastName.length < 2) {
+          return false
+      }
+      return true
+  }
+
+
+  const signupFunc =  () => {
+    if(isValid()){
+    try{
+        dispatch(signupSuccess({
+          email,
+          password,
+          firstName,
+          lastName,
+        }))
+        navigation.navigate("Login")
+    }catch(e){
+        console.log(e)
+    }
+    }
+
+  };
+
+  
+
+
+
 
 
   return (
     <SafeAreaView style={styles.container}>
-        {loading?<View style={{flex:1, justifyContent:"center", alignContent:"center"}}>
-          <ActivityIndicator size="large" color={MAINCOLOR}></ActivityIndicator>
-        </View>:
+       
         <View style={styles.viewContainer}>
           
             <Text style={[textStyles.h2, styles.title]}>Sign up:</Text>
-            <Input value={email} setValue={setEmail} placeholder="Email"></Input>
-            <Input value={password} setValue={setPassword} secureTextEntry={true} placeholder="Password"></Input>
-            <Input value={passwordRepeat} setValue={setPasswordRepeat} placeholder="Repeat password"></Input>
-            <Input value={firstName} setValue={setFirstName} placeholder="Fist Name"></Input>
-            <Input value={lastName} setValue={setLastName} placeholder="Second Name"></Input>
+            <Input error={emailError} value={email} setValue={setEmail}  placeholder="Email" keyboardType='email-address'></Input>
+            <Input error={passwordError} setError={setPasswordError} value={password} setValue={setPassword} secureTextEntry={true} placeholder="Password"></Input>
+            <Input error={passwordRepeatError} setError={setPasswordRepeatError} value={passwordRepeat}  setValue={setPasswordRepeat} secureTextEntry={true} placeholder="Repeat password"></Input>
+            <Input error={firstNameError} setError={setFirstNameError} value={firstName} setValue={setFirstName} placeholder="Fist Name"></Input>
+            <Input error={lastNameError} setError={setLastNameError} value={lastName} setValue={setLastName} placeholder="Second Name"></Input>
        
-            <Button  onPress={()=>loginFunc()} style={{alignSelf:"flex-end"}}>
+            <Button  onPress={()=>signupFunc()} style={{alignSelf:"flex-end"}}>
               Sign up
             </Button>
             <View style={{flex:1}}></View>
@@ -77,7 +99,7 @@ const loginFunc = async () => {
                 </Pressable>
             </View>
 
-        </View>}
+        </View>
         
     </SafeAreaView>
   )

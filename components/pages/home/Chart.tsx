@@ -6,7 +6,6 @@ import { WINDOW_WIDTH } from '../../../constants/layout'
 const Chart = () => {
   return (
     <SafeAreaView>
-  <Text>Bezier Line Chart</Text>
   <LineChart
 
     data={{

@@ -3,21 +3,23 @@ import {
     Keyboard,
     TextInput,
     Pressable,
-    StyleSheet
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
-import { LIGHTGREY, WHITE } from '../../constants/colors';
+import { LIGHTGREY, RED, WHITE } from '../../constants/colors';
 import { borderRadius } from '../../constants/styles';
 
 
 
-const DismissKeyboard = ({ children, focus }:{
-    children?: JSX.Element | JSX.Element[];
-    focus: boolean
-}) => (
-  <Pressable style={{zIndex:focus?100000:0, elevation:focus?1:-1}} hitSlop={focus?100000:0} onPress={() => Keyboard.dismiss()}>
-  {children}
-  </Pressable>
-  );
+// const DismissKeyboard = ({ children, focus }:{
+//     children?: JSX.Element | JSX.Element[];
+//     focus: boolean
+// }) => (
+//   <Pressable style={{zIndex:focus?100000:0, elevation:focus?1:-1}} hitSlop={focus?100000:0} onPress={() => Keyboard.dismiss()}>
+//   {children}
+//   </Pressable>
+//   );
 
 
 const Input = ({value, setValue, error, setError, style, ...props}:{
@@ -28,13 +30,11 @@ const Input = ({value, setValue, error, setError, style, ...props}:{
     style?: any;
     [key: string]: any;
 }) => {
-  const [focus, setFocus] = useState<boolean>(false)
   return (
- 
-      <DismissKeyboard focus={focus}>
+    <View style={{
+      marginBottom: 16
+    }}>
         <TextInput
-        onFocus={()=>setFocus(true)}
-        onBlur={()=>setFocus(false)}
         placeholderTextColor={LIGHTGREY}
         value={value}
         style={{
@@ -42,7 +42,9 @@ const Input = ({value, setValue, error, setError, style, ...props}:{
             onChangeText={(text) => setValue(text)}
                                 {...props}
                             />
-      </DismissKeyboard>
+                            <Text style={{color:RED, marginLeft:16, marginTop:8}}>{error}</Text>
+                            </View>
+              
   )
 }
 
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
         backgroundColor: WHITE,
         width: '100%',
         fontSize:18,
-        marginBottom: 16,
+        
         paddingHorizontal: 32,
         paddingVertical: 16,
         paddingLeft:16
