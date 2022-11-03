@@ -1,17 +1,19 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, SafeAreaView, Text, Pressable, ActivityIndicator } from 'react-native'
-import { MAINCOLOR, WHITE, WHITEBLUE } from '../constants/colors'
+import { View, StyleSheet, SafeAreaView, Text, ActivityIndicator, Pressable } from 'react-native'
+import { MAINCOLOR, WHITE } from '../constants/colors'
 // import { useAuth } from '../contexts/AuthContext'
 import Input from '../components/input/Input';
 import Button from '../components/buttons/Button';
 import { textStyles } from '../styles/text';
+import { useNavigation } from '@react-navigation/native';
  
 
-const LogIn = () => {
+const SignUp = () => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
 //   const {setCurrentUser} =  useAuth()
   const [loading, setLoading] = useState<boolean>(false)
+  const navigation = useNavigation();
 
 const loginFunc = async () => {
   setLoading(true)
@@ -48,11 +50,27 @@ const loginFunc = async () => {
             <Text style={[textStyles.h2, styles.title]}>Log In:</Text>
             <Input value={email} setValue={setEmail} placeholder="Email"></Input>
             <Input value={password} setValue={setPassword} secureTextEntry={true} placeholder="Password"></Input>
-        <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
-        </View>
-            <Button color={WHITE} onPress={()=>loginFunc()} style={{justifyContent:"center", alignItems:"center"}}>
-              Log In
+       
+            <Button  onPress={()=>loginFunc()} style={{alignSelf:"flex-end"}}>
+              Log in
             </Button>
+            <View style={{flex:1}}></View>
+            <View style={{
+                flexDirection:"row",
+                    justifyContent:"center",
+                    alignItems:"center",
+                    marginTop: 16,
+                    
+                    
+                }}>
+                
+                    <Text style={[textStyles.p]}>Don't have an account? </Text>
+          
+                <Pressable onPress={()=>navigation.navigate("Signup")}>
+                    <Text style={[textStyles.h6, {color: MAINCOLOR, fontWeight:'bold'}]}> Sign up</Text>
+                </Pressable>
+            </View>
+
         </View>}
         
     </SafeAreaView>
@@ -62,18 +80,6 @@ const loginFunc = async () => {
 
 const styles = StyleSheet.create({
 
-circle1:{
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: MAINCOLOR,
-},
-circle2:{
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: WHITEBLUE,
-},
 
 buttonText: {
     fontWeight: "600",
@@ -86,13 +92,11 @@ buttonText: {
     flex:1
   },
   title:{
-    color:"white",
     marginBottom:20,
-    fontWeight:"bold"
-  },
+    fontWeight: "bold",
+},
     container:{
         flex:1,
-        backgroundColor:MAINCOLOR
     }
 })
-export default LogIn
+export default SignUp

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { MAINCOLOR } from '../../constants/colors'
+import { MAINCOLOR, WHITE } from '../../constants/colors'
 import { borderRadius } from '../../constants/styles';
 
 const Button = ({children, color=MAINCOLOR, style, ...props}:{
@@ -10,7 +10,7 @@ const Button = ({children, color=MAINCOLOR, style, ...props}:{
 }) => {
   return (
     <Pressable {...props} style={{...styles.container, backgroundColor:color, ...style}}>
-        <Text style={{fontWeight:"bold", fontSize:16}}>{children}</Text>
+        <Text style={{fontWeight:"bold", fontSize:16, color: WHITE}}>{children}</Text>
       </Pressable>
   )
 }
@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         paddingVertical: 16,
         marginBottom: 8,
+        
         
 
 }
